@@ -1,0 +1,43 @@
+{
+  "name": "signup-subaddressing",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@mui/material": "^5.2.6",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "^4.0.3"
+  },
+  "scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      "Chrome > 4 and > 1%"
+    ],
+    "development": [
+      "last 2 Chrome versions"
+    ]
+  },
+  "devDependencies": {
+    "@craco/craco": "^6.4.3",
+    "@types/chrome": "^0.0.174",
+    "nodemon": "^2.0.15"
+  },
+  "nodemonConfig": {
+    "delay": 10000,
+    "exec": "npm run build",
+    "ext": "js,jsx,json,css",
+    "watch": [
+      "src"
+    ]
+  }
+}
