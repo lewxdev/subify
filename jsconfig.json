@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./src",
+		"jsx": "react",
+		"paths": {
+			"@/*": ["/*"],
+			"@chrome/*": ["chrome/*"],
+			"@components": ["components/index"]
+		}
+	}
+}
