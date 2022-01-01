@@ -5,7 +5,10 @@
 		"paths": {
 			"@/*": ["/*"],
 			"@chrome/*": ["chrome/*"],
-			"@components": ["components/index"]
+			"@components": ["components/index"],
+			"@helpers/*": ["helpers/*"],
+			"@hooks/*": ["hooks/*"],
+			"@interfaces": ["interfaces/index"]
 		}
 	}
 }
