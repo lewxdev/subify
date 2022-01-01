@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { STORAGE_CHANGED } from "@chrome/messages"
-import useMount from "@hooks/useMount"
 
 /**
  * A stateful value representing the value stored in `chrome.storage`
@@ -14,14 +13,14 @@ import useMount from "@hooks/useMount"
 export default function useChromeStorage(key, area = "sync") {
 	const [value, setValue] = useState(null)
 
-	const valueSetter = () => new Promise((resolve) => {
-		chrome.storage[area].set({ [key]: value }, () => resolve(value))
+	const valueSetter = (newValue) => new Promise((resolve) => {
+		chrome.storage[area].set({ [key]: newValue }, () => resolve(newValue))
 	})
 
 	// Retrieve the initial value in `chrome.storage` on mount
-	useMount(() => {
+	useEffect(() => {
 		chrome.storage[area].get([key], (result) => setValue(result[key]))
-	})
+	}, [])
 
 	// Keep the stateful `value` updated when a relevant storage event occurs
 	useEffect(() => {

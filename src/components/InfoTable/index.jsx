@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography"
 
 // Hooks
 import React, { useEffect, useState } from "react"
-import useActiveURL from "@hooks/useActiveURL"
+import useActiveURL from "@chrome/hooks/useActiveURL"
 
 // Dependencies
 import sha256 from "sha256"

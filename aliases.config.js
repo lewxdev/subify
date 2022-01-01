@@ -3,6 +3,5 @@ module.exports = (prefix = "src") => ({
 	"@chrome": `${prefix}/chrome`,
 	"@components": `${prefix}/components`,
 	"@helpers": `${prefix}/helpers`,
-	"@hooks": `${prefix}/hooks`,
 	"@interfaces": `${prefix}/interfaces`
 })
