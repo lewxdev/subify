@@ -10,19 +10,21 @@ import Typography from "@mui/material/Typography"
 // Hooks
 import React, { useEffect, useState } from "react"
 import useActiveURL from "@chrome/hooks/useActiveURL"
+import useChromeStorage from "@chrome/hooks/useChromeStorage"
 
 // Dependencies
+import { EMAIL_ADDRESS } from "@chrome/storage"
 import sha256 from "sha256"
 
 /**
  * The component displaying relevant data tabularly
  * @param {object} props - Provided properties via JSX attributes
  * @param {() => void} props.onCopy - Runs when `parsedEmail` is written to the clipboard
- * @param {string} props.value - The value (email address) to provide to the table
  */
-export default function InfoTable({ onCopy, value: emailAddress }) {
+export default function InfoTable({ onCopy }) {
 	const url = useActiveURL()
 	const [parsedEmail, setParsedEmail] = useState("")
+	const [emailAddress] = useChromeStorage(EMAIL_ADDRESS)
 
 	/** @type {React.MouseEventHandler} */
 	const handleCopyText = () =>
