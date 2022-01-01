@@ -5,8 +5,10 @@ import TextField from "@mui/material/TextField"
 
 // Hooks
 import { useState, useEffect } from "react"
+import useChromeStorage from "@chrome/hooks/useChromeStorage"
 
 // Dependencies
+import { EMAIL_ADDRESS } from "@chrome/storage"
 import { validate } from "email-validator"
 
 /**
@@ -14,17 +16,11 @@ import { validate } from "email-validator"
  * @param {object} props - Provided properties via JSX attributes
  * @param {() => void?} props.onRedundant - Runs when storage matches the input
  * @param {(value: string) => void?} props.onSuccess - Runs when input set in storage
- * @param {string} props.value - A stateful value to provide to the input
- * @param {(value: string) => Promise<string>} props.setter - A method of setting the form value
  */
-export default function EmailForm({
-	onRedundant,
-	onSuccess,
-	value: emailAddress,
-	setter,
-}) {
+export default function EmailForm({ onRedundant, onSuccess }) {
 	const [inputValue, setInputValue] = useState("")
 	const [errorText, setErrorText] = useState("")
+	const [emailAddress, setEmailAddress] = useChromeStorage(EMAIL_ADDRESS)
 
 	/** @type {React.ChangeEventHandler} */
 	const handleChange = ({ target: { value } }) => {
@@ -38,7 +34,7 @@ export default function EmailForm({
 
 		if (!validate(inputValue)) setErrorText("Invalid email address")
 		else if (emailAddress === inputValue) onRedundant?.()
-		else setter(inputValue).then((value) => onSuccess?.(value))
+		else setEmailAddress(inputValue).then((value) => onSuccess?.(value))
 	}
 
 	// Set `inputValue` to the email address stored in `chrome.storage`
