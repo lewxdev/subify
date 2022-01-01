@@ -1,27 +1,23 @@
-# React MV3 Chrome Extension #
-This project was initialized from a Create React App (CRA) template and boilerplate code for rapid development of Manifest V3 Chrome extensions. [Learn more about this template](https://github.com/lewxdev/cra-template-mv3-chrome-extension).
+# Signup Subaddressing #
+
+# About #
+This MV3 Chrome Extension creates a unique [email subaddress](https://en.wikipedia.org/wiki/Email_address#Subaddressing) for the current active tab (given the user has provided a valid email address). This is done by retrieving the active tab URL, performing a hash on its [host](https://developer.mozilla.org/en-US/docs/Web/API/URL/host) and creating a unique subaddress using the first eight characters of the hash as the tag.
+
+For example, this is useful in circumstances where the user is hesitant to give out their email address to a suspicious website or a certain website is known for sending unwanted mail. Using subaddresses in this way makes it easy to clear email inboxes by blocking emails sent to some subaddress rather than unsubscribing (which relies on the services' servers and may provide a non-intuitive interface)
+
+## Permissions ##
+The extension requests only minimal necessary permissions in order to respect privacy and adhere to [the Web Store's updated privacy policy](https://developer.chrome.com/docs/webstore/user_data/)
+
++ [`activeTab`](https://developer.chrome.com/docs/extensions/mv3/manifest/activeTab/) - Allows the extension to retrieve the URL of the currently active tab
++ [`storage`](https://developer.chrome.com/docs/extensions/reference/storage/) - Allows the extension to store the user-provided email address (which is parsed into the resulting subaddress)
 
 ## Dependencies ##
-*Optional*
-+ [`@mui/material`](https://mui.com/) Alongside its sibling dependencies (`@emotion/styled`, `@emotion/react`), MUI provides an optional UI framework for rapid development of interfaces such as popups and option pages.
+In development, the extension requires a few dependencies for the UI and functionality.
 
-*Development*
-+ [`@craco/craco`](https://www.npmjs.com/package/@craco/craco) Allows modification of the webpack configuration used to compile the extension (enabling additional features for chrome scripts and direct communication with react components)
-+ [`@types/chrome`](https://www.npmjs.com/package/@types/chrome) Provides autocomplete/intellisense for the `chrome` global during development of chrome scripts
-+ [`nodemon`](https://www.npmjs.com/package/nodemon) Allows realtime development of extension components (found at `@chrome/`) to rebuild the extension. By default the build delay is 10s, this can be changed in the `nodemonConfig` key in the `package.json`
++ [`@mui/material`](https://mui.com/) - Alongside its sibling dependencies (`@emotion/styled`, `@emotion/react`), MUI is used as the primary UI framework for visual components used in interfaces like the popup.
++ [`email-validator`](https://www.npmjs.com/package/email-validator) - A simple solution for validating email addresses prior to submitting to `chrome.storage` and validation for the provided form
++ [`react-scripts`](https://www.npmjs.com/package/react-scripts) - React (via Create React App (CRA) with [`mv3-chrome-extension`](https://www.npmjs.com/package/cra-template-mv3-chrome-extension) as a template) is used as the basis for the extension interfaces
++ [`sha256`](https://www.npmjs.com/package/sha256) - A simple solution for hashing the URL hosts for subaddress tags
 
-## Usage ##
-On creation of a new react app using this template, follow these steps to start developing an MV3 Chrome extension:
-
-*Setup*
-1. Immediately run `npm run build`, this will create a build at `extension/`
-2. Navigate to [the Extensions page](chrome://extensions) in Chrome
-3. Ensure **"Developer mode"** is enabled (top right) and select **"Load unpacked"**
-4. Select the `extension/` directory built from step 1
-5. Now you can start hacking!
-
-*Scripts*
-+ `npm run start` start a development server for building UI components/interfaces
-+ `npm run build` create a production build from all existing changes
-
-**NOTE** `npm run test` is disabled by default as it is untested.
+## Contributing ##
+Contributing is welcome, just be sure to fork the package repository and submit a pull request on your changes.
