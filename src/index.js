@@ -1,6 +1,13 @@
 import React from "react"
 import ReactDOM from "react-dom"
 
-import { App } from "@components"
+import CssBaseline from "@mui/material/CssBaseline"
+import { Popup } from "@interfaces"
 
-ReactDOM.render(<App />, document.querySelector("#root"))
+ReactDOM.render(
+	<React.StrictMode>
+		<CssBaseline />
+		<Popup />
+	</React.StrictMode>,
+	document.querySelector("#root")
+)

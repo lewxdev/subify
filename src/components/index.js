@@ -1,4 +1,6 @@
-import App from "./App"
-import Popup from "./Popup"
+import AlertPanel from "./AlertPanel"
+import EmailForm from "./EmailForm"
+import InfoTable from "./InfoTable"
+import NavBar from "./NavBar"
 
-export { App, Popup }
+export { AlertPanel, EmailForm, InfoTable, NavBar }
