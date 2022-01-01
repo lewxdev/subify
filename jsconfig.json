@@ -7,7 +7,6 @@
 			"@chrome/*": ["chrome/*"],
 			"@components": ["components/index"],
 			"@helpers/*": ["helpers/*"],
-			"@hooks/*": ["hooks/*"],
 			"@interfaces": ["interfaces/index"]
 		}
 	}

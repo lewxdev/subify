@@ -2,10 +2,10 @@ import Paper from "@mui/material/Paper"
 import { AlertPanel, EmailForm, InfoTable, NavBar } from "@components"
 
 import { useState } from "react"
-import useChromeStorage from "@hooks/useChromeStorage"
+import useChromeStorage from "@chrome/hooks/useChromeStorage"
 
-import { COPY_SUCCESS, SUBMIT_REDUNDANT, SUBMIT_SUCCESS } from "@helpers/alerts"
 import { EMAIL_ADDRESS } from "@chrome/storage"
+import { COPY_SUCCESS, SUBMIT_REDUNDANT, SUBMIT_SUCCESS } from "@helpers/alerts"
 
 /** The extension interface (UI) for the popup browser action */
 export default function Popup() {

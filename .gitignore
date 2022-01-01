@@ -10,6 +10,9 @@
 
 # production (formerly "build")
 /extension
+*.crx
+*.pem
+*.zip
 
 # misc
 .DS_Store
