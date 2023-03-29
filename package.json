@@ -1,45 +1,37 @@
 {
-	"name": "signup-subaddressing",
-	"version": "0.1.0",
-	"private": true,
-	"dependencies": {
-		"@emotion/react": "^11.7.1",
-		"@emotion/styled": "^11.6.0",
-		"@mui/material": "^5.2.6",
-		"email-validator": "^2.0.4",
-		"react": "^17.0.2",
-		"react-dom": "^17.0.2",
-		"react-scripts": "^4.0.3",
-		"sha256": "^0.2.0"
-	},
-	"scripts": {
-		"start": "craco start",
-		"build": "craco build",
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"eject": "react-scripts eject"
-	},
-	"eslintConfig": {
-		"extends": "react-app"
-	},
-	"browserslist": {
-		"production": [
-			"Chrome > 4 and > 1%"
-		],
-		"development": [
-			"last 2 Chrome versions"
-		]
-	},
-	"devDependencies": {
-		"@craco/craco": "^6.4.3",
-		"@types/chrome": "^0.0.174",
-		"nodemon": "^2.0.15"
-	},
-	"nodemonConfig": {
-		"delay": 10000,
-		"exec": "npm run build",
-		"ext": "js,jsx,json,css",
-		"watch": [
-			"src"
-		]
-	}
+  "name": "signup-subaddressing",
+  "repository": "github:lewxdev/signup-subaddressing",
+  "homepage": "https://chrome.google.com/webstore/detail/mkjgbogdoogelppeoecjeidjljhhbcdg",
+  "description": "Adds a hash to your email when signing up on websites",
+  "version": "2.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/icons-material": "^5.11.11",
+    "@mui/material": "^5.11.14",
+    "adler-32": "^1.3.1",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^1.0.14",
+    "@types/chrome": "^0.0.225",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^18.15.9",
+    "@types/react": "^18.0.29",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react": "^3.1.0",
+    "prettier": "^2.8.7",
+    "typescript": "^5.0.2",
+    "vite": "^4.2.1"
+  }
 }
