@@ -1,5 +1,10 @@
-# largely based on https://jam.dev/blog/automating-chrome-extension-publishing/
 # learn more: https://docs.github.com/en/actions
+
+# reference
+# * https://jam.dev/blog/automating-chrome-extension-publishing/
+# * https://developer.chrome.com/docs/webstore/using_webstore_api/
+# * https://github.com/fregante/chrome-webstore-upload/blob/main/How%20to%20generate%20Google%20API%20keys.md
+# * https://github.com/fregante/ghatemplates/blob/main/webext/release.yml
 
 name: Stage Chrome Web Store Release
 
@@ -47,17 +52,13 @@ jobs:
         run: pnpm build
 
       - name: Zip 🗜️
-        run: zip -r -FS extension-${{ github.event.pull_request.head.sha }}.zip dist
+        run: zip -r -FS extension-${{ github.sha }}.zip dist
 
       - name: Upload Artifact 📤
         uses: actions/upload-artifact@v3
         with:
-          name: extension-${{ github.sha }}
-          path: extension-${{ github.event.pull_request.head.sha }}.zip
+          path: extension-${{ github.sha }}.zip
 
-  # reference:
-  # * https://developer.chrome.com/docs/webstore/using_webstore_api/
-  # * https://github.com/fregante/chrome-webstore-upload/blob/main/How%20to%20generate%20Google%20API%20keys.md
   stage-extension:
     name: Stage Chrome Extension on the Chrome Web Store 🚀
     runs-on: ubuntu-latest
@@ -76,14 +77,11 @@ jobs:
         with:
           name: extension-${{ github.sha }}
 
-      - name: Install chrome-webstore-upload-cli ⬇️
-        run: npm install -g chrome-webstore-upload-cli
-
       - name: Upload to web store 🚀
-        run: |
-          chrome-webstore-upload-cli upload \
-            --source extension-${{ github.sha }}.zip \
-            --extension-id ${{ env.CRX_EXTENSION_ID }} \
-            --client-id ${{ secrets.CRX_CLIENT_ID }} \
-            --client-secret ${{ secrets.CRX_CLIENT_SECRET }} \
-            --refresh-token ${{ secrets.CRX_REFRESH_TOKEN }}
+        env:
+          EXTENSION_ID: ${{ env.CRX_EXTENSION_ID }}
+          CLIENT_ID: ${{ secrets.CRX_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CRX_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CRX_REFRESH_TOKEN }}
+        run: npx chrome-webstore-upload-cli@2 upload
+        working-directory: extension-${{ github.sha }}.zip
