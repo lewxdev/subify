@@ -9,7 +9,7 @@
 name: Stage Chrome Web Store Release
 
 env:
-  CRX_EXTENSION_ID: deibnakcmchjdngfblcckddhhcnghocd
+  CRX_EXTENSION_ID: mkjgbogdoogelppeoecjeidjljhhbcdg
   OUT_DIR: dist
 
 on:
