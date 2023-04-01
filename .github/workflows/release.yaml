@@ -94,7 +94,7 @@ jobs:
       - name: Get version 📦
         id: get-version
         run: |
-          echo "::set-output name=version::$(npx -c 'echo "$npm_package_version"')"
+          echo "version=$(npx -c 'echo "$npm_package_version"')" >> $GITHUB_OUTPUT
 
       - name: Get release notes 📝
         id: release-notes
@@ -104,10 +104,10 @@ jobs:
         uses: actions/download-artifact@v3
 
       - name: Create Release 💫
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create ${{ steps.get-version.outputs.version }} extension.zip \
             --title ${{ steps.get-version.outputs.version }} \
-            --notes ${{ steps.release-notes.outputs.release_notes }} \
-            --target ${{ github.sha }}
+            --target ${{ github.sha }} \
+            --notes <<EOF
+            ${{ steps.release-notes.outputs.notes }}
+            EOF
