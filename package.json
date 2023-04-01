@@ -1,8 +1,8 @@
 {
-  "name": "signup-subaddressing",
-  "repository": "github:lewxdev/signup-subaddressing",
+  "name": "subify",
+  "repository": "github:lewxdev/subify",
   "homepage": "https://chrome.google.com/webstore/detail/mkjgbogdoogelppeoecjeidjljhhbcdg",
-  "description": "Adds a hash to your email when signing up on websites",
+  "description": "Manage your inbox at the source. Subify enables you to use unique subaddresses for each website you sign up to.",
   "version": "2.0.0",
   "type": "module",
   "private": true,

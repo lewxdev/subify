@@ -33,9 +33,9 @@ export default function DetailsTable() {
 
     const emailAddresses = options.find((item) => item.isLastSelected)!;
     const [address, domain] = emailAddresses.key.split("@");
-    const hash = alder32.str(activeTabURL.host).toString(16);
+    const tag = alder32.str(activeTabURL.host).toString(16);
 
-    return { value: `${address}+${hash}@${domain}` };
+    return { value: `${address}+${tag}@${domain}` };
   })();
 
   const handleCopy = async () => {
