@@ -1,4 +1,5 @@
 <div align="center">
+  <br />
   <img alt="Subify logo" height="60" src="./public/assets/logo.png" />
   <br />
   <br />
@@ -30,16 +31,10 @@ that likely provide a non-intuitive interface).
 
 Built with ♥️ and TypeScript :)
 
-## Permissions
+## Contributing
 
-The extension requests only minimal necessary permissions in order to respect
-privacy and adhere to the Chrome Web Store's
-[updated privacy policy](https://developer.chrome.com/docs/webstore/user_data/).
-
-- [`activeTab`](https://developer.chrome.com/docs/extensions/mv3/manifest/activeTab/) -
-  Allows the extension to retrieve the URL of the currently active tab
-- [`storage`](https://developer.chrome.com/docs/extensions/mv3/manifest/storage/) -
-  Allows the extension to store the user-provided email address(es)
+Contributing is welcome, just be sure to fork the package repository and submit
+a pull request on your changes.
 
 ## Dependencies
 
@@ -56,11 +51,18 @@ The extension requires a few dependencies for the UI and functionality.
 - [`react`](https://reactjs.org/) - Serves as the framework for the extension's
   UI (`react-dom` is also included)
 - [`zod`](https://zod.dev/) - Provides types, schema, and validation throughout
+  the extension
 
----
+## Permissions
 
-Contributing is welcome, just be sure to fork the package repository and submit
-a pull request on your changes.
+The extension requests only minimal necessary permissions in order to respect
+privacy and adhere to the Chrome Web Store's
+[updated privacy policy](https://developer.chrome.com/docs/webstore/user_data/).
+
+- [`activeTab`](https://developer.chrome.com/docs/extensions/mv3/manifest/activeTab/) -
+  Allows the extension to retrieve the URL of the currently active tab
+- [`storage`](https://developer.chrome.com/docs/extensions/mv3/manifest/storage/) -
+  Allows the extension to store the user-provided email address(es)
 
 [^1]:
     Currently only available on the Chrome Web Store, but may be made
