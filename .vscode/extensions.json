@@ -1,3 +1,7 @@
 {
-  "recommendations": ["bradlc.vscode-tailwindcss", "joshbolduc.commitlint"]
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "joshbolduc.commitlint",
+    "dbaeumer.vscode-eslint"
+  ]
 }
