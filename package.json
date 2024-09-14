@@ -5,9 +5,35 @@
   "description": "Create unique email aliases for each website you visit",
   "author": "J. Lewis <6710419+lewxdev@users.noreply.github.com>",
   "scripts": {
-    "dev": "plasmo dev",
     "build": "plasmo build",
+    "dev": "plasmo dev",
     "package": "plasmo package"
+  },
+  "prettier": {
+    "bracketSameLine": true,
+    "bracketSpacing": true,
+    "importOrder": [
+      "<BUILTIN_MODULES>",
+      "<THIRD_PARTY_MODULES>",
+      "",
+      "^@plasmo/(.*)$",
+      "",
+      "^@plasmohq/(.*)$",
+      "",
+      "^~(.*)$",
+      "",
+      "^[./]"
+    ],
+    "plugins": [
+      "@ianvs/prettier-plugin-sort-imports",
+      "prettier-plugin-packagejson"
+    ],
+    "printWidth": 80,
+    "semi": false,
+    "singleQuote": false,
+    "tabWidth": 2,
+    "trailingComma": "none",
+    "useTabs": false
   },
   "dependencies": {
     "plasmo": "0.89.2",
@@ -21,36 +47,12 @@
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
     "prettier": "3.2.4",
+    "prettier-plugin-packagejson": "^2.5.2",
     "typescript": "5.3.3"
   },
   "manifest": {
     "host_permissions": [
       "https://*/*"
-    ]
-  },
-  "prettier": {
-    "printWidth": 80,
-    "tabWidth": 2,
-    "useTabs": false,
-    "semi": false,
-    "singleQuote": false,
-    "trailingComma": "none",
-    "bracketSpacing": true,
-    "bracketSameLine": true,
-    "plugins": [
-      "@ianvs/prettier-plugin-sort-imports"
-    ],
-    "importOrder": [
-      "<BUILTIN_MODULES>",
-      "<THIRD_PARTY_MODULES>",
-      "",
-      "^@plasmo/(.*)$",
-      "",
-      "^@plasmohq/(.*)$",
-      "",
-      "^~(.*)$",
-      "",
-      "^[./]"
     ]
   }
 }
