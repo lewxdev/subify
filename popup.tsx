@@ -1,9 +1,8 @@
-import { useState } from "react"
-
-import "@/global.css"
+import { useState } from "react";
+import "@/global.css";
 
 function IndexPopup() {
-  const [data, setData] = useState("")
+  const [data, setData] = useState("");
 
   return (
     <div className="p-4">
@@ -19,7 +18,7 @@ function IndexPopup() {
         View Docs
       </a>
     </div>
-  )
+  );
 }
 
-export default IndexPopup
+export default IndexPopup;
