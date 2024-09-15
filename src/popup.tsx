@@ -1,24 +1,34 @@
-import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import "@/global.css";
 
-function IndexPopup() {
-  const [data, setData] = useState("");
+const tabs = [
+  ["Generate", "The generate tab"],
+  ["History", "The history tab"],
+  ["Settings", "The settings tab"],
+] as const satisfies [value: string, content: React.ReactNode][];
 
+const [[defaultValue]] = tabs;
+
+export default function Popup() {
   return (
-    <div className="p-4">
-      <h2>
-        Welcome to your{" "}
-        <a href="https://www.plasmo.com" rel="noreferrer" target="_blank">
-          Plasmo
-        </a>{" "}
-        Extension!
-      </h2>
-      <input onChange={(e) => setData(e.target.value)} value={data} />
-      <a href="https://docs.plasmo.com" rel="noreferrer" target="_blank">
-        View Docs
-      </a>
-    </div>
+    <Tabs defaultValue={defaultValue} className="w-[500px]">
+      <TabsList
+        className="grid w-full"
+        style={{
+          gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`,
+        }}
+      >
+        {tabs.map(([value]) => (
+          <TabsTrigger key={value} value={value}>
+            {value}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+      {tabs.map(([value, content]) => (
+        <TabsContent key={value} value={value}>
+          {content}
+        </TabsContent>
+      ))}
+    </Tabs>
   );
 }
-
-export default IndexPopup;
