@@ -1,7 +1,7 @@
 {
   "name": "subify",
   "displayName": "Subify",
-  "version": "0.0.1",
+  "version": "3.0.0",
   "description": "Create unique email aliases for each website you visit",
   "author": "J. Lewis <6710419+lewxdev@users.noreply.github.com>",
   "scripts": {
@@ -21,13 +21,14 @@
   },
   "prettier": {
     "importOrder": [
+      "",
       "<BUILTIN_MODULES>",
-      "^react$",
+      "^react-?",
       "^@plasmo/(.*)$",
       "^@plasmohq/(.*)$",
       "<THIRD_PARTY_MODULES>",
-      "^@/.*$",
-      "^."
+      "^[@]/",
+      "^[.]"
     ],
     "plugins": [
       "@ianvs/prettier-plugin-sort-imports",
@@ -51,6 +52,10 @@
     "root": true
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
+    "@plasmohq/storage": "^1.12.0",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -58,8 +63,10 @@
     "plasmo": "0.89.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.53.0",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
