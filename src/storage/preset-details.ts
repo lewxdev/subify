@@ -6,51 +6,53 @@ const KEY = `${name}.preset-details`;
 
 export type PresetName = "custom" | "timestamp" | "domain";
 
-const initialState = {
+type State = Record<PresetName, string> & { selectedPreset: PresetName };
+
+const initialState: State = {
   custom: "custom",
-  timestamp: Date.now().toString(),
+  timestamp: "",
   domain: "",
-  selectedPreset: "domain" as PresetName,
-} satisfies Record<PresetName, string> & { selectedPreset: PresetName };
+  selectedPreset: "domain",
+};
 
 type DispatchArgs =
   | [action: "select", payload: PresetName]
-  | [action: "update", payload: Partial<typeof initialState>];
+  | [action: "update", payload: (prevState: State) => Partial<State>];
 
-export function usePresets() {
+export function usePresetDetails() {
   const [{ selectedPreset, ...presets }, setPresets, { isLoading }] =
-    useStorage<typeof initialState>(KEY, (v) => v || initialState);
+    useStorage<State>(KEY, (v) => v || initialState);
 
   const dispatchPresets = useCallback(
     (...[action, payload]: DispatchArgs) =>
-      !isLoading &&
       setPresets((prevState = initialState) => {
-        if (!action || !payload) return prevState;
+        const timestamp = Date.now().toString();
         switch (action) {
           case "select":
-            return { ...prevState, selectedPreset: payload };
+            return payload
+              ? { ...prevState, timestamp, selectedPreset: payload }
+              : prevState;
           case "update":
-            return { ...prevState, ...payload };
+            return { ...prevState, ...payload(prevState), timestamp };
           default:
             return prevState;
         }
       }),
-    [isLoading, setPresets],
+    [setPresets],
   );
 
   useEffect(() => {
+    if (isLoading) return;
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
       const domain = tab?.url
         ? new URL(tab.url).hostname.replace(/^www\./, "")
         : "";
-      dispatchPresets("update", {
+      dispatchPresets("update", ({ selectedPreset: preset }) => ({
         domain,
-        timestamp: Date.now().toString(),
-        selectedPreset:
-          selectedPreset === "domain" && !domain ? "timestamp" : selectedPreset,
-      });
+        selectedPreset: preset === "domain" && !domain ? "timestamp" : preset,
+      }));
     });
-  }, [selectedPreset, dispatchPresets]);
+  }, [isLoading, dispatchPresets]);
 
   return { selectedPreset, presets, dispatchPresets };
 }
