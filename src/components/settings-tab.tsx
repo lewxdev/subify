@@ -1,38 +1,38 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { EmailEntry, useEmailEntries } from "@/hooks/use-email-entries";
+import { EmailEntry, useEmailEntries } from "@/storage/email-entries";
 import { cn } from "@/utils";
 
-export function SettingsTab() {
-  const [entries, dispatch] = useEmailEntries();
+SettingsTab.displayName = "Settings";
+
+export function SettingsTab(props: React.ComponentPropsWithoutRef<"div">) {
+  const data = useEmailEntries();
   return (
-    <div className="space-y-2">
-      <EmailEntryForm dispatch={dispatch} />
-      {entries.map((entry) => (
-        <EmailEntryForm dispatch={dispatch} entry={entry} key={entry.id} />
+    <div {...props}>
+      <EmailEntryForm {...data} />
+      {data.entries.map((entry) => (
+        <EmailEntryForm {...data} entry={entry} key={entry.id} />
       ))}
     </div>
   );
 }
 
-type EmailEntryFormProps = {
-  dispatch: ReturnType<typeof useEmailEntries>[1];
+type EmailEntryFormProps = ReturnType<typeof useEmailEntries> & {
   entry?: EmailEntry;
 };
 
-function EmailEntryForm({ dispatch, entry }: EmailEntryFormProps) {
+function EmailEntryForm({ dispatchEntries, entry }: EmailEntryFormProps) {
   const form = useForm({
     defaultValues: entry || { address: "", separator: "+" },
     resolver: zodResolver(EmailEntry),
   });
   const { isSubmitSuccessful, submitCount } = form.formState;
   const handleSubmit = form.handleSubmit((data, event) =>
-    dispatch(!entry ? "insert" : event ? "remove" : "update", data),
+    dispatchEntries(!entry ? "insert" : event ? "remove" : "update", data),
   );
 
   useEffect(() => {
@@ -49,7 +49,7 @@ function EmailEntryForm({ dispatch, entry }: EmailEntryFormProps) {
     <Form {...form}>
       <form
         className={cn(
-          "flex items-center space-x-2",
+          "flex gap-x-2",
           !entry && !!submitCount && !isSubmitSuccessful && "animate-shake",
         )}
         onSubmit={handleSubmit}
@@ -80,15 +80,9 @@ function EmailEntryForm({ dispatch, entry }: EmailEntryFormProps) {
             </FormItem>
           )}
         />
-        {entry ? (
-          <Button size="icon" variant="destructive">
-            <X className="h-4 w-4" />
-          </Button>
-        ) : (
-          <Button size="icon">
-            <Plus className="h-4 w-4" />
-          </Button>
-        )}
+        <Button className="w-16" variant={entry ? "destructive" : "default"}>
+          {entry ? "Delete" : "Add"}
+        </Button>
       </form>
     </Form>
   );
