@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useEmailEntries } from "@/storage/email-entries";
-import { usePresets, type PresetName } from "@/storage/preset-details";
+import { usePresetDetails, type PresetName } from "@/storage/preset-details";
 
 const presetIcons = [
   ["custom", PenLine],
@@ -22,9 +22,9 @@ GenerateTab.displayName = "Generate";
 
 export function GenerateTab(props: React.ComponentPropsWithoutRef<"div">) {
   const { selectedEntry, entries, dispatchEntries } = useEmailEntries();
-  const { selectedPreset, presets, dispatchPresets } = usePresets();
-  const detail = presets[selectedPreset];
+  const { selectedPreset, presets, dispatchPresets } = usePresetDetails();
 
+  const detail = presets[selectedPreset];
   const subaddress =
     detail &&
     selectedEntry &&
@@ -63,7 +63,7 @@ export function GenerateTab(props: React.ComponentPropsWithoutRef<"div">) {
           readOnly={selectedPreset !== "custom"}
           value={detail}
           onChange={({ target }) =>
-            dispatchPresets("update", { custom: target.value })
+            dispatchPresets("update", () => ({ custom: target.value }))
           }
           onFocus={({ target }) => target.select()}
         />
