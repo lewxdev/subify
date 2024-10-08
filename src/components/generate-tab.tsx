@@ -1,15 +1,10 @@
 import { Clipboard, Clock, Globe, PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import * as Select from "@/components/ui/select";
+import * as ToggleGroup from "@/components/ui/toggle-group";
 import { useEmailEntries } from "@/storage/email-entries";
+import { useHistoryEntries } from "@/storage/history-entries";
 import { usePresetDetails, type PresetName } from "@/storage/preset-details";
 
 const presetIcons = [
@@ -18,11 +13,10 @@ const presetIcons = [
   ["domain", Globe],
 ] as const satisfies [name: PresetName, Icon: React.ComponentType][];
 
-GenerateTab.displayName = "Generate";
-
-export function GenerateTab(props: React.ComponentPropsWithoutRef<"div">) {
+export function GenerateTab() {
   const { selectedEntry, entries, dispatchEntries } = useEmailEntries();
   const { selectedPreset, presets, dispatchPresets } = usePresetDetails();
+  const { dispatchHistory } = useHistoryEntries();
 
   const detail = presets[selectedPreset];
   const subaddress =
@@ -31,29 +25,38 @@ export function GenerateTab(props: React.ComponentPropsWithoutRef<"div">) {
     `${selectedEntry.user}${selectedEntry.separator}${detail}@${selectedEntry.domain}`;
 
   return (
-    <div {...props}>
+    <>
       <div className="flex gap-x-2">
-        <Select
+        <Select.Root
           value={selectedEntry?.id || ""}
           onValueChange={(id) => dispatchEntries("select", { id })}
         >
-          <SelectTrigger disabled={!entries.length}>
-            <SelectValue placeholder="Add an email address in settings">
-              {entries.length ? subaddress : "Add an email address in settings"}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
+          <Select.Trigger className="w-0 flex-1" disabled={!entries.length}>
+            <Select.Value>
+              {entries.length
+                ? `${subaddress} \u00a0`
+                : "Add an email address in settings"}
+            </Select.Value>
+          </Select.Trigger>
+          <Select.Content className="max-h-[var(--radix-select-content-available-height)] w-[var(--radix-select-trigger-width)]">
             {entries.map(({ id, address }) => (
-              <SelectItem key={id} value={id}>
+              <Select.Item key={id} value={id}>
                 {address}
-              </SelectItem>
+              </Select.Item>
             ))}
-          </SelectContent>
-        </Select>
+          </Select.Content>
+        </Select.Root>
         <Button
           size="icon"
           disabled={!subaddress}
-          onClick={() => navigator.clipboard.writeText(subaddress!)}
+          onClick={() => {
+            if (!subaddress) return;
+            navigator.clipboard.writeText(subaddress);
+            dispatchHistory("insert", {
+              url: presets.domain,
+              value: subaddress,
+            });
+          }}
         >
           <Clipboard className="h-4 w-4" />
         </Button>
@@ -67,23 +70,23 @@ export function GenerateTab(props: React.ComponentPropsWithoutRef<"div">) {
           }
           onFocus={({ target }) => target.select()}
         />
-        <ToggleGroup
+        <ToggleGroup.Root
           type="single"
           value={selectedPreset}
           onValueChange={(name: PresetName) => dispatchPresets("select", name)}
         >
           {presetIcons.map(([name, Icon]) => (
-            <ToggleGroupItem
+            <ToggleGroup.Item
               aria-label={`Use ${name} preset`}
               disabled={name === "domain" && !presets.domain}
               key={name}
               value={name}
             >
               <Icon className="h-4 w-4" />
-            </ToggleGroupItem>
+            </ToggleGroup.Item>
           ))}
-        </ToggleGroup>
+        </ToggleGroup.Root>
       </div>
-    </div>
+    </>
   );
 }

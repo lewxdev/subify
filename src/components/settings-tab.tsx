@@ -2,22 +2,20 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import * as Form from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { EmailEntry, useEmailEntries } from "@/storage/email-entries";
 import { cn } from "@/utils";
 
-SettingsTab.displayName = "Settings";
-
-export function SettingsTab(props: React.ComponentPropsWithoutRef<"div">) {
+export function SettingsTab() {
   const data = useEmailEntries();
   return (
-    <div {...props}>
+    <>
       <EmailEntryForm {...data} />
       {data.entries.map((entry) => (
         <EmailEntryForm {...data} entry={entry} key={entry.id} />
       ))}
-    </div>
+    </>
   );
 }
 
@@ -46,7 +44,7 @@ function EmailEntryForm({ dispatchEntries, entry }: EmailEntryFormProps) {
   }, [entry, form, isSubmitSuccessful]);
 
   return (
-    <Form {...form}>
+    <Form.Root {...form}>
       <form
         className={cn(
           "flex gap-x-2",
@@ -54,36 +52,36 @@ function EmailEntryForm({ dispatchEntries, entry }: EmailEntryFormProps) {
         )}
         onSubmit={handleSubmit}
       >
-        <FormField
+        <Form.Field
           control={form.control}
           name="address"
           render={({ field }) => (
-            <FormItem className="flex-1">
-              <FormControl>
+            <Form.Item className="flex-1">
+              <Form.Control>
                 <Input
                   autoComplete="email"
                   placeholder="Enter an email address"
                   {...field}
                 />
-              </FormControl>
-            </FormItem>
+              </Form.Control>
+            </Form.Item>
           )}
         />
-        <FormField
+        <Form.Field
           control={form.control}
           name="separator"
           render={({ field }) => (
-            <FormItem>
-              <FormControl>
+            <Form.Item>
+              <Form.Control>
                 <Input maxLength={1} className="w-10 text-center" {...field} />
-              </FormControl>
-            </FormItem>
+              </Form.Control>
+            </Form.Item>
           )}
         />
         <Button className="w-16" variant={entry ? "destructive" : "default"}>
           {entry ? "Delete" : "Add"}
         </Button>
       </form>
-    </Form>
+    </Form.Root>
   );
 }
