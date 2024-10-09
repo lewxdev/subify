@@ -10,9 +10,6 @@ importers:
       "@hookform/resolvers":
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.53.0(react@18.2.0))
-      "@plasmohq/storage":
-        specifier: ^1.12.0
-        version: 1.12.0(react@18.2.0)
       "@radix-ui/react-label":
         specifier: ^2.1.0
         version: 2.1.0(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -34,6 +31,9 @@ importers:
       "@radix-ui/react-toggle-group":
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      "@tanstack/react-query":
+        specifier: ^5.59.0
+        version: 5.59.0(react@18.2.0)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -43,15 +43,12 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       lucide-react:
         specifier: ^0.441.0
         version: 0.441.0(react@18.2.0)
       plasmo:
-        specifier: 0.89.2
-        version: 0.89.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.47)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 0.89.3
+        version: 0.89.3(@swc/core@1.7.26(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.47)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -86,9 +83,6 @@ importers:
       "@types/chrome":
         specifier: 0.0.258
         version: 0.0.258
-      "@types/lodash":
-        specifier: ^4.17.10
-        version: 4.17.10
       "@types/node":
         specifier: 20.11.5
         version: 20.11.5
@@ -1872,17 +1866,6 @@ packages:
       }
     engines: { parcel: ">= 2.7.0" }
 
-  "@plasmohq/storage@1.12.0":
-    resolution:
-      {
-        integrity: sha512-LoCyO0PXl609ee8QKVEwVpkTyD/8WjYQhd0sxFomLxbdxsZC0LD4n8nv4nSegP5X8lYQBQnR/LMq4ZXoQh87wA==,
-      }
-    peerDependencies:
-      react: ^16.8.6 || ^17 || ^18
-    peerDependenciesMeta:
-      react:
-        optional: true
-
   "@pnpm/config.env-replace@1.1.0":
     resolution:
       {
@@ -2711,6 +2694,20 @@ packages:
       }
     engines: { node: ">=14.16" }
 
+  "@tanstack/query-core@5.59.0":
+    resolution:
+      {
+        integrity: sha512-WGD8uIhX6/deH/tkZqPNcRyAhDUqs729bWKoByYHSogcshXfFbppOdTER5+qY7mFvu8KEFJwT0nxr8RfPTVh0Q==,
+      }
+
+  "@tanstack/react-query@5.59.0":
+    resolution:
+      {
+        integrity: sha512-YDXp3OORbYR+8HNQx+lf4F73NoiCmCcSvZvgxE29OifmQFk0sBlO26NWLHpcNERo92tVk3w+JQ53/vkcRUY1hA==,
+      }
+    peerDependencies:
+      react: ^18 || ^19
+
   "@trysound/sax@0.2.0":
     resolution:
       {
@@ -2770,12 +2767,6 @@ packages:
     resolution:
       {
         integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==,
-      }
-
-  "@types/lodash@4.17.10":
-    resolution:
-      {
-        integrity: sha512-YpS0zzoduEhuOWjAotS6A5AVCva7X4lVlYLF0FYHAY9sdraBfnatttHItlWeZdGhuEkf+OzMNg2ZYAx8t+52uQ==,
       }
 
   "@types/node@20.11.5":
@@ -6328,13 +6319,6 @@ packages:
       }
     engines: { node: ">=6" }
 
-  pify@6.1.0:
-    resolution:
-      {
-        integrity: sha512-KocF8ve28eFjjuBKKGvzOBGzG8ew2OqOOSxTTZhirkzH7h3BI1vyzqlR0qbfcDBve1Yzo3FVlWUAtCRrbVN8Fw==,
-      }
-    engines: { node: ">=14.16" }
-
   pirates@4.0.6:
     resolution:
       {
@@ -6342,10 +6326,10 @@ packages:
       }
     engines: { node: ">= 6" }
 
-  plasmo@0.89.2:
+  plasmo@0.89.3:
     resolution:
       {
-        integrity: sha512-pYiXi/z8F2LUXMTHNlaoqHVELs7EUFwJVrdga1G3FSPezU77w5QiYE7JrICVIi+rZX41lEokEJQN/P5/BdedGg==,
+        integrity: sha512-rBOv1fbNnhdfsDmI5XAMCvNmPwZsXWdcPU4lLH8I1PqXNDeyXCEJdiCLC+4LvB8V262a2UhHgvPwTW9Au4qAmQ==,
       }
     hasBin: true
 
@@ -8427,7 +8411,7 @@ snapshots:
       json5: 2.2.3
       msgpackr: 1.11.0
       nullthrows: 1.1.1
-      semver: 7.5.4
+      semver: 7.6.3
 
   "@parcel/diagnostic@2.8.3":
     dependencies:
@@ -8513,7 +8497,7 @@ snapshots:
       "@parcel/fs": 2.9.3(@parcel/core@2.9.3)
       "@parcel/utils": 2.9.3
       nullthrows: 1.1.1
-      semver: 7.5.4
+      semver: 7.6.3
     transitivePeerDependencies:
       - "@parcel/core"
 
@@ -8606,7 +8590,7 @@ snapshots:
       "@parcel/types": 2.9.3(@parcel/core@2.9.3)
       "@parcel/utils": 2.9.3
       "@parcel/workers": 2.9.3(@parcel/core@2.9.3)
-      semver: 7.5.4
+      semver: 7.6.3
 
   "@parcel/packager-css@2.9.3(@parcel/core@2.9.3)":
     dependencies:
@@ -8747,7 +8731,7 @@ snapshots:
       browserslist: 4.23.3
       json5: 2.2.3
       nullthrows: 1.1.1
-      semver: 7.5.4
+      semver: 7.6.3
     transitivePeerDependencies:
       - "@parcel/core"
 
@@ -8780,7 +8764,7 @@ snapshots:
       posthtml: 0.16.6
       posthtml-parser: 0.10.2
       posthtml-render: 3.0.0
-      semver: 7.5.4
+      semver: 7.6.3
       srcset: 4.0.0
     transitivePeerDependencies:
       - "@parcel/core"
@@ -8811,7 +8795,7 @@ snapshots:
       browserslist: 4.23.3
       nullthrows: 1.1.1
       regenerator-runtime: 0.13.11
-      semver: 7.5.4
+      semver: 7.6.3
 
   "@parcel/transformer-json@2.9.3(@parcel/core@2.9.3)":
     dependencies:
@@ -8837,7 +8821,7 @@ snapshots:
       clone: 2.1.2
       nullthrows: 1.1.1
       postcss-value-parser: 4.2.0
-      semver: 7.5.4
+      semver: 7.6.3
     transitivePeerDependencies:
       - "@parcel/core"
 
@@ -8849,7 +8833,7 @@ snapshots:
       posthtml: 0.16.6
       posthtml-parser: 0.10.2
       posthtml-render: 3.0.0
-      semver: 7.5.4
+      semver: 7.6.3
     transitivePeerDependencies:
       - "@parcel/core"
 
@@ -8894,7 +8878,7 @@ snapshots:
       posthtml: 0.16.6
       posthtml-parser: 0.10.2
       posthtml-render: 3.0.0
-      semver: 7.5.4
+      semver: 7.6.3
     transitivePeerDependencies:
       - "@parcel/core"
 
@@ -9326,12 +9310,6 @@ snapshots:
       - velocityjs
       - walrus
       - whiskers
-
-  "@plasmohq/storage@1.12.0(react@18.2.0)":
-    dependencies:
-      pify: 6.1.0
-    optionalDependencies:
-      react: 18.2.0
 
   "@pnpm/config.env-replace@1.1.0": {}
 
@@ -9852,6 +9830,13 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
+  "@tanstack/query-core@5.59.0": {}
+
+  "@tanstack/react-query@5.59.0(react@18.2.0)":
+    dependencies:
+      "@tanstack/query-core": 5.59.0
+      react: 18.2.0
+
   "@trysound/sax@0.2.0": {}
 
   "@tsconfig/strictest@2.0.5": {}
@@ -9878,8 +9863,6 @@ snapshots:
   "@types/http-cache-semantics@4.0.4": {}
 
   "@types/json-schema@7.0.15": {}
-
-  "@types/lodash@4.17.10": {}
 
   "@types/node@20.11.5":
     dependencies:
@@ -11117,7 +11100,7 @@ snapshots:
       array-union: 2.1.0
       dir-glob: 3.0.1
       fast-glob: 3.3.2
-      ignore: 5.2.4
+      ignore: 5.3.2
       merge2: 1.4.1
       slash: 3.0.0
 
@@ -11125,7 +11108,7 @@ snapshots:
     dependencies:
       dir-glob: 3.0.1
       fast-glob: 3.3.2
-      ignore: 5.2.4
+      ignore: 5.3.2
       merge2: 1.4.1
       slash: 4.0.0
 
@@ -11831,7 +11814,7 @@ snapshots:
 
   node-abi@3.67.0:
     dependencies:
-      semver: 7.5.4
+      semver: 7.6.3
 
   node-addon-api@4.3.0: {}
 
@@ -11972,7 +11955,7 @@ snapshots:
       got: 12.6.1
       registry-auth-token: 5.0.2
       registry-url: 6.0.1
-      semver: 7.5.4
+      semver: 7.6.3
 
   parent-module@1.0.1:
     dependencies:
@@ -12023,11 +12006,9 @@ snapshots:
   pify@4.0.1:
     optional: true
 
-  pify@6.1.0: {}
-
   pirates@4.0.6: {}
 
-  plasmo@0.89.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.47)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  plasmo@0.89.3(@swc/core@1.7.26(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.47)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       "@expo/spawn-async": 1.7.2
       "@parcel/core": 2.9.3
@@ -12456,7 +12437,7 @@ snapshots:
       detect-libc: 2.0.3
       node-addon-api: 6.1.0
       prebuild-install: 7.1.2
-      semver: 7.5.4
+      semver: 7.6.3
       simple-get: 4.0.1
       tar-fs: 3.0.6
       tunnel-agent: 0.6.0
