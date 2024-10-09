@@ -114,9 +114,9 @@ export const Control = React.forwardRef<
       ref={ref}
       id={formItemId}
       aria-describedby={
-        !error
-          ? `${formDescriptionId}`
-          : `${formDescriptionId} ${formMessageId}`
+        !error ?
+          `${formDescriptionId}`
+        : `${formDescriptionId} ${formMessageId}`
       }
       aria-invalid={!!error}
       {...props}
@@ -150,17 +150,17 @@ export const Message = React.forwardRef<
   const body = error ? String(error?.message) : children;
 
   return !body ? null : (
-    <p
-      ref={ref}
-      id={formMessageId}
-      className={cn(
-        "text-sm font-medium text-red-500 dark:text-red-900",
-        className,
-      )}
-      {...props}
-    >
-      {body}
-    </p>
-  );
+      <p
+        ref={ref}
+        id={formMessageId}
+        className={cn(
+          "text-sm font-medium text-red-500 dark:text-red-900",
+          className,
+        )}
+        {...props}
+      >
+        {body}
+      </p>
+    );
 });
 Message.displayName = "FormMessage";

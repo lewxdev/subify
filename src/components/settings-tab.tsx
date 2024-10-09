@@ -1,54 +1,59 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import * as Form from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { EmailEntry, useEmailEntries } from "@/storage/email-entries";
+import { Email, useEmails } from "@/hooks/use-emails";
 import { cn } from "@/utils";
 
 export function SettingsTab() {
-  const data = useEmailEntries();
+  const [emailsQuery] = useEmails();
   return (
     <>
-      <EmailEntryForm {...data} />
-      {data.entries.map((entry) => (
-        <EmailEntryForm {...data} entry={entry} key={entry.id} />
+      <EmailForm />
+      {emailsQuery.data?.map((email) => (
+        <EmailForm email={email} key={email.id} />
       ))}
     </>
   );
 }
 
-type EmailEntryFormProps = ReturnType<typeof useEmailEntries> & {
-  entry?: EmailEntry;
-};
+function EmailForm({ email }: { email?: Email }) {
+  const [, emailsMutation] = useEmails();
 
-function EmailEntryForm({ dispatchEntries, entry }: EmailEntryFormProps) {
   const form = useForm({
-    defaultValues: entry || { address: "", separator: "+" },
-    resolver: zodResolver(EmailEntry),
+    defaultValues: email || { address: "", separator: "+" },
+    resolver: zodResolver(Email),
   });
   const { isSubmitSuccessful, submitCount } = form.formState;
   const handleSubmit = form.handleSubmit((data, event) =>
-    dispatchEntries(!entry ? "insert" : event ? "remove" : "update", data),
+    emailsMutation.mutateAsync([
+      !email ? "insert"
+      : event ? "remove"
+      : "update",
+      data,
+    ]),
   );
 
   useEffect(() => {
-    if (!entry) return;
+    if (!email) return;
     return form.watch(() => handleSubmit()).unsubscribe;
-  }, [entry, form, handleSubmit]);
+  }, [email, form, handleSubmit]);
 
   useEffect(() => {
-    if (entry || !isSubmitSuccessful) return;
+    if (email || !isSubmitSuccessful) return;
     form.reset();
-  }, [entry, form, isSubmitSuccessful]);
+  }, [email, form, isSubmitSuccessful]);
 
+  const [Icon, buttonVariant] = email ? [X, "destructive" as const] : [Check];
   return (
     <Form.Root {...form}>
       <form
         className={cn(
           "flex gap-x-2",
-          !entry && !!submitCount && !isSubmitSuccessful && "animate-shake",
+          !email && !!submitCount && !isSubmitSuccessful && "animate-shake",
         )}
         onSubmit={handleSubmit}
       >
@@ -78,8 +83,8 @@ function EmailEntryForm({ dispatchEntries, entry }: EmailEntryFormProps) {
             </Form.Item>
           )}
         />
-        <Button className="w-16" variant={entry ? "destructive" : "default"}>
-          {entry ? "Delete" : "Add"}
+        <Button size="icon" variant={buttonVariant}>
+          <Icon className="h-4 w-4" />
         </Button>
       </form>
     </Form.Root>
