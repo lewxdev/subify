@@ -3,43 +3,55 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import * as Select from "@/components/ui/select";
 import * as ToggleGroup from "@/components/ui/toggle-group";
-import { useEmailEntries } from "@/storage/email-entries";
-import { useHistoryEntries } from "@/storage/history-entries";
-import { usePresetDetails, type PresetName } from "@/storage/preset-details";
+import { useEmails } from "@/hooks/use-emails";
+import { useHistory } from "@/hooks/use-history";
+import { Preset, usePresets } from "@/hooks/use-presets";
+import { useTab } from "@/hooks/use-tab";
 
 const presetIcons = [
-  ["custom", PenLine],
-  ["timestamp", Clock],
-  ["domain", Globe],
-] as const satisfies [name: PresetName, Icon: React.ComponentType][];
+  [Preset.Custom, PenLine],
+  [Preset.Timestamp, Clock],
+  [Preset.Domain, Globe],
+] as const satisfies [name: Preset, Icon: React.ComponentType][];
 
 export function GenerateTab() {
-  const { selectedEntry, entries, dispatchEntries } = useEmailEntries();
-  const { selectedPreset, presets, dispatchPresets } = usePresetDetails();
-  const { dispatchHistory } = useHistoryEntries();
+  const [emailsQuery, emailsMutation] = useEmails();
+  const [presetQuery, presetMutation] = usePresets();
+  const [, historyMutation] = useHistory();
 
-  const detail = presets[selectedPreset];
+  const { data: tab } = useTab();
+  const domain =
+    tab?.url ? new URL(tab.url).hostname.replace(/^www\./, "") : "";
+
+  const preset = presetQuery.data?.selected;
+  const email = emailsQuery.data?.find(({ isSelected }) => isSelected);
+  const detail =
+    preset === Preset.Custom ? presetQuery.data?.custom || ""
+    : preset === Preset.Domain ? domain
+    : preset === Preset.Timestamp ? Date.now().toString()
+    : "";
   const subaddress =
-    detail &&
-    selectedEntry &&
-    `${selectedEntry.user}${selectedEntry.separator}${detail}@${selectedEntry.domain}`;
+    detail && email ?
+      `${email.user}${email.separator}${detail}@${email.domain}`
+    : email?.address;
 
   return (
     <>
       <div className="flex gap-x-2">
         <Select.Root
-          value={selectedEntry?.id || ""}
-          onValueChange={(id) => dispatchEntries("select", { id })}
+          value={email?.id || ""}
+          onValueChange={(id) => emailsMutation.mutate(["select", { id }])}
         >
-          <Select.Trigger className="w-0 flex-1" disabled={!entries.length}>
-            <Select.Value>
-              {entries.length
-                ? `${subaddress} \u00a0`
-                : "Add an email address in settings"}
+          <Select.Trigger
+            className="w-0 flex-1"
+            disabled={!emailsQuery.data?.length}
+          >
+            <Select.Value placeholder="Add an email address in settings">
+              {subaddress}
             </Select.Value>
           </Select.Trigger>
           <Select.Content className="max-h-[var(--radix-select-content-available-height)] w-[var(--radix-select-trigger-width)]">
-            {entries.map(({ id, address }) => (
+            {emailsQuery.data?.map(({ id, address }) => (
               <Select.Item key={id} value={id}>
                 {address}
               </Select.Item>
@@ -49,13 +61,13 @@ export function GenerateTab() {
         <Button
           size="icon"
           disabled={!subaddress}
-          onClick={() => {
+          onClick={async () => {
             if (!subaddress) return;
             navigator.clipboard.writeText(subaddress);
-            dispatchHistory("insert", {
-              url: presets.domain,
-              value: subaddress,
-            });
+            historyMutation.mutate([
+              "insert",
+              { url: domain!, value: subaddress },
+            ]);
           }}
         >
           <Clipboard className="h-4 w-4" />
@@ -63,22 +75,24 @@ export function GenerateTab() {
       </div>
       <div className="flex gap-x-2">
         <Input
-          readOnly={selectedPreset !== "custom"}
+          readOnly={preset !== "custom"}
           value={detail}
           onChange={({ target }) =>
-            dispatchPresets("update", () => ({ custom: target.value }))
+            presetMutation.mutate(["update", target.value])
           }
           onFocus={({ target }) => target.select()}
         />
         <ToggleGroup.Root
           type="single"
-          value={selectedPreset}
-          onValueChange={(name: PresetName) => dispatchPresets("select", name)}
+          value={preset || ""}
+          onValueChange={(name: Preset) =>
+            presetMutation.mutate(["select", name])
+          }
         >
           {presetIcons.map(([name, Icon]) => (
             <ToggleGroup.Item
               aria-label={`Use ${name} preset`}
-              disabled={name === "domain" && !presets.domain}
+              disabled={name === "domain" && !domain}
               key={name}
               value={name}
             >
