@@ -1,6 +1,6 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GenerateTab } from "@/components/generate-tab";
 import { HistoryTab } from "@/components/history-tab";
+import { QueryProvider } from "@/components/query-provider";
 import { SettingsTab } from "@/components/settings-tab";
 import * as ScrollArea from "@/components/ui/scroll-area";
 import * as Tabs from "@/components/ui/tabs";
@@ -14,11 +14,9 @@ const tabs = [
   ["Settings", SettingsTab],
 ] as const satisfies [name: string, Content: React.ComponentType][];
 
-const queryClient = new QueryClient();
-
 export default function Popup() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryProvider>
       <Tabs.Root defaultValue="Generate" className="w-[500px]">
         <Tabs.List className="grid w-full auto-cols-fr grid-flow-col rounded-none">
           {tabs.map(([name]) => (
@@ -50,6 +48,6 @@ export default function Popup() {
           </a>
         </footer>
       </Tabs.Root>
-    </QueryClientProvider>
+    </QueryProvider>
   );
 }

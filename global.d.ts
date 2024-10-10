@@ -1,9 +1,17 @@
+import type { QueryClient } from "@tanstack/react-query";
 import type { z } from "zod";
 
-declare module "zod/lib/external" {
-  /**
-   * (**custom**) a union of the input / output type of a zod schema.
-   * constrains the type to an essentially parse-safe value
-   */
-  export type parsable<T extends z.ZodType> = z.input<T> | z.output<T>;
+declare global {
+  interface Window {
+    queryClient: QueryClient | undefined;
+  }
+}
+
+declare module "zod/lib/helpers/util" {
+  declare namespace util {
+    type required<T extends z.ZodType, K extends keyof T["_output"]> = Partial<
+      Omit<T["_output"], K>
+    > &
+      Pick<T["_output"], K>;
+  }
 }
