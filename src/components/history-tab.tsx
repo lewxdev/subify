@@ -1,7 +1,7 @@
 import { intlFormatDistance } from "date-fns";
 import { Clipboard, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useHistory } from "@/hooks/use-history";
+import { useHistory } from "@/storage/history";
 
 export function HistoryTab() {
   const [historyQuery, historyMutation] = useHistory();
