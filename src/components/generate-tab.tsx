@@ -1,34 +1,36 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Clipboard, Clock, Globe, PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import * as Select from "@/components/ui/select";
 import * as ToggleGroup from "@/components/ui/toggle-group";
 import { useTab } from "@/hooks/use-tab";
-import { useEmails } from "@/storage/emails";
-import { useHistory } from "@/storage/history";
-import { Preset, usePresets } from "@/storage/presets";
+import * as storage from "@/storage";
 
 const presetIcons = [
-  [Preset.Custom, PenLine],
-  [Preset.Timestamp, Clock],
-  [Preset.Domain, Globe],
-] as const satisfies [name: Preset, Icon: React.ComponentType][];
+  ["custom", PenLine],
+  ["timestamp", Clock],
+  ["domain", Globe],
+] as const satisfies [name: storage.PresetName, Icon: React.ComponentType][];
 
 export function GenerateTab() {
-  const [emailsQuery, emailsMutation] = useEmails();
-  const [presetQuery, presetMutation] = usePresets();
-  const [, historyMutation] = useHistory();
+  const queryEmails = useQuery(storage.emails.queryOptions());
+  const queryPresets = useQuery(storage.presets.queryOptions());
+  const updateEmail = useMutation(storage.emails.update);
+  const updatePreset = useMutation(storage.presets.update);
+  const selectPreset = useMutation(storage.presets.select);
+  const insertHistory = useMutation(storage.history.insert);
 
   const { data: tab } = useTab();
   const domain =
     tab?.url ? new URL(tab.url).hostname.replace(/^www\./, "") : "";
 
-  const preset = presetQuery.data?.selected;
-  const email = emailsQuery.data?.find(({ isSelected }) => isSelected);
+  const preset = queryPresets.data?.name;
+  const email = queryEmails.data?.find(({ isSelected }) => isSelected);
   const detail =
-    preset === Preset.Custom ? presetQuery.data?.custom || ""
-    : preset === Preset.Domain ? domain
-    : preset === Preset.Timestamp ? Date.now().toString()
+    preset === "custom" ? queryPresets.data?.custom || ""
+    : preset === "domain" ? domain
+    : preset === "timestamp" ? Date.now().toString()
     : "";
   const subaddress =
     detail && email ?
@@ -40,18 +42,20 @@ export function GenerateTab() {
       <div className="flex gap-x-2">
         <Select.Root
           value={email?.id || ""}
-          onValueChange={(id) => emailsMutation.mutate(["select", { id }])}
+          onValueChange={(id) =>
+            updateEmail.mutateAsync({ id, isSelected: true })
+          }
         >
           <Select.Trigger
             className="w-0 flex-1"
-            disabled={!emailsQuery.data?.length}
+            disabled={!queryEmails.data?.length}
           >
             <Select.Value placeholder="Add an email address in settings">
               {subaddress}
             </Select.Value>
           </Select.Trigger>
           <Select.Content className="max-h-[var(--radix-select-content-available-height)] w-[var(--radix-select-trigger-width)]">
-            {emailsQuery.data?.map(({ id, address }) => (
+            {queryEmails.data?.map(({ id, address }) => (
               <Select.Item key={id} value={id}>
                 {address}
               </Select.Item>
@@ -64,10 +68,7 @@ export function GenerateTab() {
           onClick={async () => {
             if (!subaddress) return;
             navigator.clipboard.writeText(subaddress);
-            historyMutation.mutate([
-              "insert",
-              { url: domain!, value: subaddress },
-            ]);
+            insertHistory.mutateAsync({ url: domain!, value: subaddress });
           }}
         >
           <Clipboard className="h-4 w-4" />
@@ -77,16 +78,14 @@ export function GenerateTab() {
         <Input
           readOnly={preset !== "custom"}
           value={detail}
-          onChange={({ target }) =>
-            presetMutation.mutate(["update", target.value])
-          }
+          onChange={({ target }) => updatePreset.mutateAsync(target.value)}
           onFocus={({ target }) => target.select()}
         />
         <ToggleGroup.Root
           type="single"
           value={preset || ""}
-          onValueChange={(name: Preset) =>
-            presetMutation.mutate(["select", name])
+          onValueChange={(name: storage.PresetName) =>
+            selectPreset.mutateAsync(name)
           }
         >
           {presetIcons.map(([name, Icon]) => (
