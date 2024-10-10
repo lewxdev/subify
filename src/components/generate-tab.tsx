@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import * as Select from "@/components/ui/select";
 import * as ToggleGroup from "@/components/ui/toggle-group";
-import { useEmails } from "@/hooks/use-emails";
-import { useHistory } from "@/hooks/use-history";
-import { Preset, usePresets } from "@/hooks/use-presets";
 import { useTab } from "@/hooks/use-tab";
+import { useEmails } from "@/storage/emails";
+import { useHistory } from "@/storage/history";
+import { Preset, usePresets } from "@/storage/presets";
 
 const presetIcons = [
   [Preset.Custom, PenLine],
