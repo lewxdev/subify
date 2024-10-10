@@ -5,7 +5,7 @@ import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import * as Form from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Email, useEmails } from "@/hooks/use-emails";
+import { Email, useEmails } from "@/storage/emails";
 import { cn } from "@/utils";
 
 export function SettingsTab() {
