@@ -3,6 +3,7 @@
 
 import { queryOptions, type UseMutationOptions } from "@tanstack/react-query";
 import type { z } from "zod";
+import { queryClient } from "@/components/query-provider";
 
 type Reducers<TOutput, TInput, ReducerPayloads> = {
   [K in keyof ReducerPayloads]: (
@@ -19,7 +20,6 @@ export const createStorageManager = <TOutput, TInput, ReducerPayloads>(
   schema: z.ZodType<TOutput, z.ZodTypeDef, TInput>,
   reducers: Reducers<TOutput, TInput, ReducerPayloads>,
 ) => {
-  const getClient = () => window.queryClient;
   const getOptions = () =>
     queryOptions({
       queryKey: ["storage", key] as const,
@@ -33,9 +33,6 @@ export const createStorageManager = <TOutput, TInput, ReducerPayloads>(
     (source, action) => {
       source[action] = {
         mutationFn: async (payload: ReducerPayloads[typeof action]) => {
-          const queryClient = getClient();
-          if (!queryClient) return;
-
           const value = await queryClient.ensureQueryData(getOptions());
           const data = await reducers[action](value, payload);
           const newValue = await schema.parseAsync(data);
@@ -51,7 +48,7 @@ export const createStorageManager = <TOutput, TInput, ReducerPayloads>(
           );
         },
         onSuccess: () => {
-          getClient()?.invalidateQueries(getOptions());
+          queryClient.invalidateQueries(getOptions());
         },
       };
       return source;
