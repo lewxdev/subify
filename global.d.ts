@@ -1,11 +1,4 @@
-import type { QueryClient } from "@tanstack/react-query";
 import type { z } from "zod";
-
-declare global {
-  interface Window {
-    queryClient: QueryClient | undefined;
-  }
-}
 
 declare module "zod/lib/helpers/util" {
   declare namespace util {
