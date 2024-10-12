@@ -1,5 +1,5 @@
 import { intlFormatDistance } from "date-fns";
-import { Clipboard, X } from "lucide-react";
+import { Copy, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { history } from "@/storage/history";
 
@@ -17,8 +17,8 @@ export function HistoryTab() {
           <p className="flex-1 truncate pr-2 text-sm" title={entry.value}>
             {entry.value}
             <br />
-            <span className="text-xs text-gray-500">
-              {entry.url} &bull;{" "}
+            <span className="select-none text-xs text-gray-500">
+              {entry.url && `${entry.url} • `}
               {intlFormatDistance(entry.createdAt, Date.now(), {
                 style: "narrow",
                 locale: navigator.language,
@@ -36,7 +36,7 @@ export function HistoryTab() {
             size="icon"
             onClick={() => navigator.clipboard.writeText(entry.value)}
           >
-            <Clipboard className="h-4 w-4" />
+            <Copy className="h-4 w-4" />
           </Button>
         </div>
       ))}

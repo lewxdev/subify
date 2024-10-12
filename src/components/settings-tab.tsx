@@ -38,6 +38,8 @@ function EmailForm({ email }: { email?: z.infer<Email> }) {
     : updateEmail.mutateAsync(data),
   );
 
+  const [Icon, buttonVariant] = email ? [X, "destructive" as const] : [Check];
+
   useEffect(() => {
     if (!email) return;
     return form.watch(() => handleSubmit()).unsubscribe;
@@ -48,7 +50,6 @@ function EmailForm({ email }: { email?: z.infer<Email> }) {
     form.reset();
   }, [email, form, isSubmitSuccessful]);
 
-  const [Icon, buttonVariant] = email ? [X, "destructive" as const] : [Check];
   return (
     <Form.Root {...form}>
       <form
