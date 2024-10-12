@@ -1,12 +1,13 @@
-import { Clipboard, Clock, Globe, PenLine } from "lucide-react";
+import { useState } from "react";
+import { Check, Clock, Copy, Globe, PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import * as Select from "@/components/ui/select";
 import * as ToggleGroup from "@/components/ui/toggle-group";
-import { useActiveTab } from "@/hooks/use-active-tab";
 import { emails } from "@/storage/emails";
 import { history } from "@/storage/history";
 import { presets, type PresetName } from "@/storage/presets";
+import { getDomain } from "@/utils";
 
 const presetIcons = [
   ["custom", PenLine],
@@ -15,6 +16,8 @@ const presetIcons = [
 ] as const satisfies [name: PresetName, Icon: React.ComponentType][];
 
 export function GenerateTab() {
+  const [isCopied, setIsCopied] = useState(false);
+
   const queryEmails = emails.useQuery();
   const queryPresets = presets.useQuery();
   const updateEmail = emails.useMutation("update");
@@ -22,17 +25,10 @@ export function GenerateTab() {
   const selectPreset = presets.useMutation("select");
   const insertHistory = history.useMutation("insert");
 
-  const { data: tab } = useActiveTab();
-  const domain =
-    tab?.url ? new URL(tab.url).hostname.replace(/^www\./, "") : "";
-
-  const preset = queryPresets.data?.name || "";
   const email = queryEmails.data?.find(({ isSelected }) => isSelected);
-  const detail =
-    preset === "custom" ? queryPresets.data?.custom || ""
-    : preset === "domain" ? domain
-    : preset === "timestamp" ? Date.now().toString()
-    : preset;
+  const detail = queryPresets.data?.detail || "";
+  const preset = queryPresets.data?.presetName || "domain";
+
   const subaddress =
     detail && email ?
       `${email.user}${email.separator}${detail}@${email.domain}`
@@ -67,12 +63,18 @@ export function GenerateTab() {
           size="icon"
           disabled={!subaddress}
           onClick={async () => {
-            if (!subaddress) return;
-            navigator.clipboard.writeText(subaddress);
-            insertHistory.mutateAsync({ url: domain!, value: subaddress });
+            if (!subaddress || isCopied) return;
+            const url = (preset === "domain" && detail) || (await getDomain());
+            // todo: resolve promises in parallel
+            await navigator.clipboard.writeText(subaddress);
+            await insertHistory.mutateAsync({ url, value: subaddress });
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), 2000);
           }}
         >
-          <Clipboard className="h-4 w-4" />
+          {isCopied ?
+            <Check className="h-4 w-4" />
+          : <Copy className="h-4 w-4" />}
         </Button>
       </div>
       <div className="flex gap-x-2">
@@ -86,13 +88,13 @@ export function GenerateTab() {
           type="single"
           value={preset}
           onValueChange={(name: typeof preset) =>
-            name && selectPreset.mutateAsync(name)
+            selectPreset.mutateAsync(name)
           }
         >
           {presetIcons.map(([name, Icon]) => (
             <ToggleGroup.Item
               aria-label={`Use ${name} preset`}
-              disabled={name === "domain" && !domain}
+              disabled={name === "domain" && preset === "domain" && !detail}
               key={name}
               value={name}
             >

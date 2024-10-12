@@ -20,7 +20,7 @@ export default function Popup() {
       <Tabs.Root defaultValue="Generate" className="w-[500px]">
         <Tabs.List className="grid w-full auto-cols-fr grid-flow-col rounded-none">
           {tabs.map(([name]) => (
-            <Tabs.Trigger key={name} value={name}>
+            <Tabs.Trigger className="select-none" key={name} value={name}>
               {name}
             </Tabs.Trigger>
           ))}
@@ -36,7 +36,7 @@ export default function Popup() {
             </ScrollArea.Root>
           </Tabs.Content>
         ))}
-        <footer className="flex bg-gray-100 p-4 dark:bg-gray-800">
+        <footer className="flex select-none bg-gray-100 p-4 dark:bg-gray-800">
           v{version} &bull;&nbsp;
           <a
             className="text-blue-500 dark:text-blue-400"
