@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { createStorageManager } from "@/storage/util";
-
-const key = "history";
+import { createStorageHooks } from "@/storage/utils";
+import { isMatchingInput } from "@/utils";
 
 const schema = z
   .object({
@@ -16,17 +15,14 @@ const schema = z
 export const History = schema._def.innerType.element;
 export type History = typeof History;
 
-export const history = createStorageManager(key, schema, {
+export const history = createStorageHooks("history", schema, {
+  // rule: update if inserted entry exists AND move updated entry to the top
   insert: (state, payload: z.input<History>) => {
-    const createdAt = Date.now();
-    const existingIndex = state.findIndex(
-      (entry) => entry.url === payload.url && entry.value === payload.value,
+    const index = state.findIndex((entry) =>
+      isMatchingInput(History, payload, entry),
     );
-    return existingIndex === -1 ?
-        [{ ...payload, createdAt }, ...state]
-      : state.map((entry, index) =>
-          index === existingIndex ? { ...entry, createdAt } : entry,
-        );
+    const [newEntry] = index === -1 ? [payload] : state.splice(index, 1);
+    return [{ ...newEntry, createdAt: Date.now() }, ...state];
   },
   remove: (state, payload: z.util.required<History, "id">) =>
     state.filter((entry) => entry.id !== payload.id),
