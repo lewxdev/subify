@@ -1,17 +1,16 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { Check, X } from "lucide-react";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import * as Form from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import * as storage from "@/storage";
+import { Email, emails } from "@/storage/emails";
 import { cn } from "@/utils";
 
 export function SettingsTab() {
-  const queryEmails = useQuery(storage.emails.queryOptions());
+  const queryEmails = emails.useQuery();
 
   return (
     <>
@@ -23,14 +22,14 @@ export function SettingsTab() {
   );
 }
 
-function EmailForm({ email }: { email?: z.infer<storage.Email> }) {
-  const insertEmail = useMutation(storage.emails.insert);
-  const updateEmail = useMutation(storage.emails.update);
-  const removeEmail = useMutation(storage.emails.remove);
+function EmailForm({ email }: { email?: z.infer<Email> }) {
+  const insertEmail = emails.useMutation("insert");
+  const updateEmail = emails.useMutation("update");
+  const removeEmail = emails.useMutation("remove");
 
   const form = useForm({
     defaultValues: email || { address: "", separator: "+" },
-    resolver: zodResolver(storage.Email),
+    resolver: zodResolver(Email),
   });
   const { isSubmitSuccessful, submitCount } = form.formState;
   const handleSubmit = form.handleSubmit((data, event) =>
