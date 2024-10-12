@@ -1,12 +1,11 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { intlFormatDistance } from "date-fns";
 import { Clipboard, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import * as storage from "@/storage";
+import { history } from "@/storage/history";
 
 export function HistoryTab() {
-  const queryHistory = useQuery(storage.history.queryOptions());
-  const removeHistory = useMutation(storage.history.remove);
+  const queryHistory = history.useQuery();
+  const removeHistory = history.useMutation("remove");
 
   return (
     <>

@@ -1,37 +1,38 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { Clipboard, Clock, Globe, PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import * as Select from "@/components/ui/select";
 import * as ToggleGroup from "@/components/ui/toggle-group";
-import { useTab } from "@/hooks/use-tab";
-import * as storage from "@/storage";
+import { useActiveTab } from "@/hooks/use-active-tab";
+import { emails } from "@/storage/emails";
+import { history } from "@/storage/history";
+import { presets, type PresetName } from "@/storage/presets";
 
 const presetIcons = [
   ["custom", PenLine],
   ["timestamp", Clock],
   ["domain", Globe],
-] as const satisfies [name: storage.PresetName, Icon: React.ComponentType][];
+] as const satisfies [name: PresetName, Icon: React.ComponentType][];
 
 export function GenerateTab() {
-  const queryEmails = useQuery(storage.emails.queryOptions());
-  const queryPresets = useQuery(storage.presets.queryOptions());
-  const updateEmail = useMutation(storage.emails.update);
-  const updatePreset = useMutation(storage.presets.update);
-  const selectPreset = useMutation(storage.presets.select);
-  const insertHistory = useMutation(storage.history.insert);
+  const queryEmails = emails.useQuery();
+  const queryPresets = presets.useQuery();
+  const updateEmail = emails.useMutation("update");
+  const updatePreset = presets.useMutation("update");
+  const selectPreset = presets.useMutation("select");
+  const insertHistory = history.useMutation("insert");
 
-  const { data: tab } = useTab();
+  const { data: tab } = useActiveTab();
   const domain =
     tab?.url ? new URL(tab.url).hostname.replace(/^www\./, "") : "";
 
-  const preset = queryPresets.data?.name;
+  const preset = queryPresets.data?.name || "";
   const email = queryEmails.data?.find(({ isSelected }) => isSelected);
   const detail =
     preset === "custom" ? queryPresets.data?.custom || ""
     : preset === "domain" ? domain
     : preset === "timestamp" ? Date.now().toString()
-    : "";
+    : preset;
   const subaddress =
     detail && email ?
       `${email.user}${email.separator}${detail}@${email.domain}`
@@ -83,9 +84,9 @@ export function GenerateTab() {
         />
         <ToggleGroup.Root
           type="single"
-          value={preset || ""}
-          onValueChange={(name: storage.PresetName) =>
-            selectPreset.mutateAsync(name)
+          value={preset}
+          onValueChange={(name: typeof preset) =>
+            name && selectPreset.mutateAsync(name)
           }
         >
           {presetIcons.map(([name, Icon]) => (

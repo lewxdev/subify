@@ -1,7 +1,5 @@
 import { z } from "zod";
-import { createStorageManager } from "@/storage/util";
-
-const key = "presets";
+import { createStorageHooks } from "@/storage/utils";
 
 const schema = z
   .object({
@@ -11,8 +9,8 @@ const schema = z
   .default({});
 
 export type PresetName = z.infer<typeof schema>["name"];
-export const presets = createStorageManager(key, schema, {
-  select: (state, payload: z.output<typeof schema>["name"]) =>
-    payload ? { ...state, name: payload } : state,
+
+export const presets = createStorageHooks("presets", schema, {
+  select: (state, payload: PresetName) => ({ ...state, name: payload }),
   update: (state, payload: string) => ({ ...state, custom: payload }),
 });
