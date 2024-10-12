@@ -15,47 +15,47 @@ export function SettingsTab() {
   return (
     <>
       <EmailForm />
-      {queryEmails.data?.map((email) => (
-        <EmailForm email={email} key={email.id} />
+      {queryEmails.data?.map((entry) => (
+        <EmailForm entry={entry} key={entry.id} />
       ))}
     </>
   );
 }
 
-function EmailForm({ email }: { email?: z.infer<Email> }) {
+function EmailForm({ entry }: { entry?: z.infer<Email> }) {
   const insertEmail = emails.useMutation("insert");
   const updateEmail = emails.useMutation("update");
   const removeEmail = emails.useMutation("remove");
 
   const form = useForm({
-    defaultValues: email || { address: "", separator: "+" },
+    defaultValues: entry || { address: "", separator: "+" },
     resolver: zodResolver(Email),
   });
   const { isSubmitSuccessful, submitCount } = form.formState;
   const handleSubmit = form.handleSubmit((data, event) =>
-    !email ? insertEmail.mutateAsync(data)
+    !entry ? insertEmail.mutateAsync(data)
     : event ? removeEmail.mutateAsync(data)
     : updateEmail.mutateAsync(data),
   );
 
-  const [Icon, buttonVariant] = email ? [X, "destructive" as const] : [Check];
+  const [Icon, buttonVariant] = entry ? [X, "destructive" as const] : [Check];
 
   useEffect(() => {
-    if (!email) return;
+    if (!entry) return;
     return form.watch(() => handleSubmit()).unsubscribe;
-  }, [email, form, handleSubmit]);
+  }, [entry, form, handleSubmit]);
 
   useEffect(() => {
-    if (email || !isSubmitSuccessful) return;
+    if (entry || !isSubmitSuccessful) return;
     form.reset();
-  }, [email, form, isSubmitSuccessful]);
+  }, [entry, form, isSubmitSuccessful]);
 
   return (
     <Form.Root {...form}>
       <form
         className={cn(
           "flex gap-x-2",
-          !email && !!submitCount && !isSubmitSuccessful && "animate-shake",
+          !entry && !!submitCount && !isSubmitSuccessful && "animate-shake",
         )}
         onSubmit={handleSubmit}
       >
