@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Check, Clock, Copy, Globe, PenLine } from "lucide-react";
+import { useWriteClipboard } from "@/components/hooks/use-write-clipboard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import * as Select from "@/components/ui/select";
@@ -16,8 +16,7 @@ const presetIcons = [
 ] as const satisfies [name: PresetName, Icon: React.ComponentType][];
 
 export function GenerateTab() {
-  const [isCopied, setIsCopied] = useState(false);
-
+  const writeClipboard = useWriteClipboard();
   const queryEmails = emails.useQuery();
   const queryPresets = presets.useQuery();
   const updateEmail = emails.useMutation("update");
@@ -63,16 +62,15 @@ export function GenerateTab() {
           size="icon"
           disabled={!subaddress}
           onClick={async () => {
-            if (!subaddress || isCopied) return;
+            if (writeClipboard.isPending || writeClipboard.isSuccess) return;
             const url = (preset === "domain" && detail) || (await getDomain());
-            // todo: resolve promises in parallel
-            await navigator.clipboard.writeText(subaddress);
-            await insertHistory.mutateAsync({ url, value: subaddress });
-            setIsCopied(true);
-            setTimeout(() => setIsCopied(false), 2000);
+            const value = subaddress!; // disabled when subaddress is not present
+            // todo: add feedback when history insertion fails
+            insertHistory.mutateAsync({ url, value });
+            writeClipboard.mutateAsync(value);
           }}
         >
-          {isCopied ?
+          {writeClipboard.isSuccess ?
             <Check className="h-4 w-4" />
           : <Copy className="h-4 w-4" />}
         </Button>
