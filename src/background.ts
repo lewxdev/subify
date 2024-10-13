@@ -2,8 +2,9 @@
 
 import { z } from "zod";
 import { emails } from "@/storage/emails";
+import { history } from "@/storage/history";
 import { PresetName, presets } from "@/storage/presets";
-import { getSubaddress, unsafeIncludes } from "@/utils";
+import { getDomain, getSubaddress, unsafeIncludes } from "@/utils";
 import { displayName } from "../package.json";
 
 chrome.runtime.onInstalled.addListener(async () => {
@@ -43,6 +44,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       element.value = value;
     },
   });
+
+  const domain = await getDomain(info.pageUrl);
+  await history.mutationFn("insert", { url: domain, value: subaddress });
 });
 
 const createContextMenus = (entries: z.infer<typeof emails.schema>) => {

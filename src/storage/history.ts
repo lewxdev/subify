@@ -10,6 +10,7 @@ const schema = z
     value: z.string(),
   })
   .array()
+  // todo: add transform to track both the full url and the domain
   .default([]);
 
 export const History = schema._def.innerType.element;
