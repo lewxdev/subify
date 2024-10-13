@@ -108,6 +108,8 @@
   "manifest": {
     "permissions": [
       "activeTab",
+      "contextMenus",
+      "scripting",
       "storage"
     ]
   }
