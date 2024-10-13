@@ -36,16 +36,19 @@ export default function Popup() {
             </ScrollArea.Root>
           </Tabs.Content>
         ))}
-        <footer className="flex select-none bg-gray-100 p-4 dark:bg-gray-800">
-          v{version} &bull;&nbsp;
-          <a
-            className="text-blue-500 dark:text-blue-400"
-            href="https://github.com/lewxdev/subify"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-          </a>
+        <footer className="flex select-none items-center justify-between bg-gray-100 p-4 dark:bg-gray-800">
+          <span>v{version}</span>
+          <span>
+            star on{" "}
+            <a
+              className="text-blue-500 dark:text-blue-400"
+              href="https://github.com/lewxdev/subify"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub!
+            </a>
+          </span>
         </footer>
       </Tabs.Root>
     </QueryProvider>
