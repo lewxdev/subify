@@ -5,9 +5,12 @@ import type { Email } from "@/storage/emails";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export const getDomain = async () => {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  return tab?.url ? new URL(tab.url).hostname.replace(/^www\./, "") : "";
+export const getDomain = async (url?: string) => {
+  url ||= await chrome.tabs
+    .query({ active: true, currentWindow: true })
+    .then(([tab]) => tab?.url);
+
+  return url ? new URL(url).hostname.replace(/^www\./, "") : "";
 };
 
 export const isMatchingInput = <TInput extends Record<string, z.Primitive>>(
