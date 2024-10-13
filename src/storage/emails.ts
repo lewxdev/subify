@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createStorageHooks } from "@/storage/utils";
+import { createStorageUtils } from "@/storage/utils";
 import { isMatchingInput } from "@/utils";
 
 // todo: try to handle schema migration from v2 to v3
@@ -20,12 +20,13 @@ const schema = z
     return { ...entry, user, domain };
   })
   .array()
+  // todo: add transform to keep track of the selected entry
   .default([]);
 
 export const Email = schema._def.innerType.element;
 export type Email = typeof Email;
 
-export const emails = createStorageHooks("emails", schema, {
+export const emails = createStorageUtils("emails", schema, {
   // rule: select inserted entry if no entries exist AND skip if inserted entry exists
   insert: (state, payload: z.input<Email>) =>
     !state.find((entry) => isMatchingInput(Email._def.schema, payload, entry)) ?
