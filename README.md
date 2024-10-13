@@ -1,6 +1,7 @@
 <div align="center">
   <br />
-  <img alt="Subify logo" height="60" src="./assets/logo.png" />
+  <img alt="Subify logo" height="60" src="./assets/brand-dark.png#gh-dark-mode-only" />
+  <img alt="Subify logo" height="60" src="./assets/brand-light.png#gh-light-mode-only" />
   <br />
   <br />
   <a href="https://chrome.google.com/webstore/detail/mkjgbogdoogelppeoecjeidjljhhbcdg">
