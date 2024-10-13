@@ -1,10 +1,13 @@
 import { z } from "zod";
-import { createStorageHooks } from "@/storage/utils";
+import { createStorageUtils } from "@/storage/utils";
 import { getDomain } from "@/utils";
+
+export const PresetName = z.enum(["custom", "domain", "timestamp"]);
+export type PresetName = z.infer<typeof PresetName>;
 
 const schema = z
   .object({
-    presetName: z.enum(["custom", "domain", "timestamp"]).default("domain"),
+    presetName: PresetName.default("domain"),
     custom: z.string().default("custom"),
   })
   .transform(async (state, ctx) => {
@@ -25,9 +28,7 @@ const schema = z
   })
   .default({});
 
-export type PresetName = z.infer<typeof schema>["presetName"];
-
-export const presets = createStorageHooks("presets", schema, {
+export const presets = createStorageUtils("presets", schema, {
   select: (state, payload: PresetName) => ({ ...state, presetName: payload }),
   update: (state, payload: string) => ({ ...state, custom: payload }),
 });
