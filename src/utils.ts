@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { z } from "zod";
+import type { Email } from "@/storage/emails";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
@@ -17,3 +18,11 @@ export const isMatchingInput = <TInput extends Record<string, z.Primitive>>(
   Object.entries(schema._def.shape()).every(
     ([key, innerSchema]) => innerSchema.isOptional() || a[key] === b[key],
   );
+
+export const unsafeIncludes = <T>(array: T[], value: unknown): value is T =>
+  array.includes(value as T);
+
+export const getSubaddress = (
+  { address, domain, user, separator }: z.infer<Email>,
+  detail: string,
+) => (detail ? `${user}${separator}${detail}@${domain}` : address);

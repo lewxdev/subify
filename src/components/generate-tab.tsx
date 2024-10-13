@@ -7,7 +7,7 @@ import * as ToggleGroup from "@/components/ui/toggle-group";
 import { emails } from "@/storage/emails";
 import { history } from "@/storage/history";
 import { presets, type PresetName } from "@/storage/presets";
-import { getDomain } from "@/utils";
+import { getDomain, getSubaddress } from "@/utils";
 
 const presetIcons = [
   ["custom", PenLine],
@@ -27,11 +27,7 @@ export function GenerateTab() {
   const email = queryEmails.data?.find(({ isSelected }) => isSelected);
   const detail = queryPresets.data?.detail || "";
   const preset = queryPresets.data?.presetName || "domain";
-
-  const subaddress =
-    detail && email ?
-      `${email.user}${email.separator}${detail}@${email.domain}`
-    : email?.address;
+  const subaddress = detail && email && getSubaddress(email, detail);
 
   return (
     <>

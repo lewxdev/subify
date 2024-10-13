@@ -1,72 +1,66 @@
 // learn more: https://developer.chrome.com/docs/extensions/develop/concepts/service-workers
 
-import type { z } from "zod";
+import { z } from "zod";
 import { emails } from "@/storage/emails";
 import { PresetName, presets } from "@/storage/presets";
+import { getSubaddress, unsafeIncludes } from "@/utils";
+import { displayName } from "../package.json";
 
 chrome.runtime.onInstalled.addListener(async () => {
-  createContextMenus(await emails.queryFn());
+  const emailEntries = await emails.queryFn();
+  createContextMenus(emailEntries);
 });
 
 chrome.storage.onChanged.addListener(async ({ [emails.key]: emailsChange }) => {
-  createContextMenus(
-    emailsChange?.newValue ?
-      emails.schema.parse(emailsChange.newValue)
-    : await emails.queryFn(),
-  );
+  if (!emailsChange) return;
+  const emailEntries = await emails.schema.parseAsync(emailsChange.newValue);
+  createContextMenus(emailEntries);
 });
 
 // todo: add simpler, more extensive validation for the menu item ids
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (!tab?.id) return;
-  if (!info.pageUrl) return;
-  if (typeof info.menuItemId !== "string") return;
+  if (
+    !tab?.id ||
+    !info.pageUrl ||
+    !(typeof info.menuItemId === "string") ||
+    !unsafeIncludes(PresetName._def.values, info.menuItemId)
+  )
+    return;
 
-  const [emailId, presetName] = info.menuItemId.split(".");
-  if (!emailId || !presetName) return;
-  if (info.menuItemId !== `${emailId}.${presetName}`) return;
-
-  const emailEntries = await emails.queryFn();
-  const email = emailEntries.find((entry) => entry.id === emailId);
-  if (!email) return;
-  const preset = await presets.mutationFn("select", presetName as PresetName);
-  if (!preset.detail) return;
-  const subaddress = `${email.user}${email.separator}${preset.detail}@${email.domain}`;
+  const email = await emails
+    .queryFn()
+    .then((entries) => entries.find((entry) => entry.isSelected));
+  const subaddress = await presets
+    .mutationFn("select", info.menuItemId)
+    .then(({ detail }) => getSubaddress(email!, detail));
 
   await chrome.scripting.executeScript({
     target: { tabId: tab.id },
-    func: (value: string) => {
+    args: [subaddress],
+    func: (value) => {
       const element = document.activeElement;
       if (!(element instanceof HTMLInputElement)) return;
       element.value = value;
     },
-    args: [subaddress],
   });
 });
 
-const createContextMenus = (emailEntries: z.infer<typeof emails.schema>) => {
+const createContextMenus = (entries: z.infer<typeof emails.schema>) => {
   chrome.contextMenus.removeAll(() => {
-    chrome.contextMenus.create({
-      title: "Autofill",
+    if (!entries.some((entry) => entry.isSelected)) return;
+
+    const parentId = chrome.contextMenus.create({
       id: "autofill",
+      title: `${displayName} autofill...`,
       contexts: ["editable"],
     });
 
-    emailEntries.forEach((entry) => {
+    PresetName._def.values.forEach((presetName) => {
       chrome.contextMenus.create({
-        title: entry.address,
-        id: entry.id,
-        parentId: "autofill",
+        id: presetName,
+        title: presetName,
+        parentId,
         contexts: ["editable"],
-      });
-
-      PresetName._def.values.forEach((preset) => {
-        chrome.contextMenus.create({
-          title: preset,
-          id: `${entry.id}.${preset}`,
-          parentId: entry.id,
-          contexts: ["editable"],
-        });
       });
     });
   });
