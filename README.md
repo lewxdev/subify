@@ -37,16 +37,17 @@ subaddress are delivered to the inbox you already use.
 
 ## Permissions
 
-The extension requests only minimal necessary permissions in order to respect
+The extension requests only necessary permissions in order to respect user
 privacy and adhere to the Chrome Web Store's
 [updated privacy policy](https://developer.chrome.com/docs/webstore/user_data/).
 
 - [`activeTab`](https://developer.chrome.com/docs/extensions/reference/api/tabs) -
-  Allows the extension to retrieve the URL of the currently active tab
+  Allows the extension to retrieve the URL of the currently active tab when
+  requested by the user and provide context in history
 - [`contextMenus`](https://developer.chrome.com/docs/extensions/reference/api/contextMenus) -
-  Allows the extension to add a context menu item for autofill
+  Allows the extension to add a context menu item for autofill on input fields
 - [`scripting`](https://developer.chrome.com/docs/extensions/reference/api/scripting) -
-  Allows the extension to autofill input fields on the page
+  Allows the extension to perform autofill on active input fields
 - [`storage`](https://developer.chrome.com/docs/extensions/reference/api/storage) -
   Allows the extension to store functional data (email address(es), history, etc.)
 
